@@ -1,11 +1,5 @@
-```/* SET THESE UP PER PROJECT */
-projectName = "..."
-gitlabPath = "..."
-
 /* DO NOT TOUCH: REQUIRED FOR BUILD LOGIC */
 dateTime = java.time.LocalDate.now()
-environmentParts ="${env.JOB_BASE_NAME}".split("-")
-environment = environmentParts[environmentParts.length - 1]
 
 pipeline {
     agent none
@@ -69,26 +63,5 @@ pipeline {
                 }
             }
         }
-
-        /* If enabled, launch the deployment job */
-        stage('Deploy image') {
-            steps {
-                script {
-                    node {
-                        if (Deploy == "Build & deploy") {
-                            jobResponse = sh(
-                                returnStdout: true,
-                                script: "curl 'http://scrumble:...@.../job/deploy-${projectName}/buildWithParameters?token=...&Omgeving=${environment}&Tag=registry.gitlab.com/${gitlabPath}:${tagName}'"
-                            )
-
-                            if (jobResponse.contains("404")) {
-                                error("Deploy job 'deploy-${projectName}' does not exist")
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
-```
